@@ -19,7 +19,7 @@ package com.google.android.samples.dynamicfeatures.ondemand
 import android.os.Bundle
 import android.widget.TextView
 import com.google.android.play.core.splitinstall.SplitInstallHelper
-import com.google.android.samples.dynamicfeatures.BaseSplitActivity
+import com.ubercab.driver.BaseSplitActivity
 import com.google.android.samples.dynamicfeatures.ondemand.ccode.R
 
 /** A simple activity displaying some text coming through via JNI. */

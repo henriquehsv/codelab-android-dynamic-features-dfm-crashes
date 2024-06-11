@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.samples.dynamicfeatures
+package com.ubercab.driver
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity

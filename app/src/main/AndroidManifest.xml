@@ -16,7 +16,7 @@
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
-    package="com.google.android.samples.dynamicfeatures">
+    package="com.ubercab.driver">
 
     <application
         android:name="com.google.android.play.core.splitcompat.SplitCompatApplication"

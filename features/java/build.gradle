@@ -23,6 +23,7 @@ android {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
     }
+    android.buildTypes.release.debuggable = true
 }
 
 dependencies {

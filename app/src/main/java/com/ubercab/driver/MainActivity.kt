@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.samples.dynamicfeatures
+package com.ubercab.driver
 
 import android.content.Intent
 import android.os.Bundle
@@ -26,12 +26,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
+import com.google.android.play.core.splitinstall.SplitInstallHelper
 import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
 import com.google.android.play.core.splitinstall.SplitInstallRequest
 import com.google.android.play.core.splitinstall.SplitInstallSessionState
 import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
+import dalvik.system.BaseDexClassLoader
 
 private const val packageName = "com.google.android.samples.dynamicfeatures.ondemand"
 private const val kotlinSampleClassname = "$packageName.KotlinSampleActivity"
@@ -101,13 +103,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         manager = SplitInstallManagerFactory.create(this)
-
         initializeViews()
     }
 
     override fun onResume() {
         // Listener can be registered even without directly triggering a download.
         manager.registerListener(listener)
+
+        // forces the system to cache native libraries
+        (classLoader as BaseDexClassLoader).findLibrary("foo-jni")
         super.onResume()
     }
 
@@ -123,6 +127,8 @@ class MainActivity : AppCompatActivity() {
      */
     private fun loadAndLaunchModule(name: String) {
         updateProgressMessage("Loading module $name")
+        Log.d("Before loading", classLoader.toString())
+
         // Skip loading if the module already is installed. Perform success action directly.
         if (manager.installedModules.contains(name)) {
             updateProgressMessage("Already installed")
@@ -209,16 +215,22 @@ class MainActivity : AppCompatActivity() {
      * @param launch `true` if the feature module should be launched, else `false`.
      */
     private fun onSuccessfulLoad(moduleName: String, launch: Boolean) {
+        Log.d("After loading", classLoader.toString())
         if (launch) {
             when (moduleName) {
                 moduleKotlin -> launchActivity(kotlinSampleClassname)
                 moduleJava -> launchActivity(javaSampleClassname)
-                moduleNative -> launchActivity(nativeSampleClassname)
+                moduleNative -> launchNativeActivity()
                 moduleAssets -> displayAssets()
             }
         }
 
         displayButtons()
+    }
+
+    private fun launchNativeActivity() {
+        SplitInstallHelper.loadLibrary(this, "hello2-jni")
+        launchActivity(nativeSampleClassname)
     }
 
     /** Launch an activity by its class name. */
